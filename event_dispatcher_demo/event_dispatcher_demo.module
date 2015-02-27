@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Contains event_dispatcher_demo.module
+ */
+
+/**
+ * Implements hook_demo_config_save().
+ */
+function event_dispatcher_demo_demo_config_save($configValues) {
+
+  $configValues['my_name_website'] = $configValues['my_name'] . " / " . $configValues['my_website'];
+
+  return $configValues;
+
+}
+

@@ -9,7 +9,6 @@ namespace Drupal\event_dispatcher_demo\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\event_dispatcher_demo\DemoEvent;
 
 class DemoForm extends ConfigFormBase {
 
@@ -52,19 +51,11 @@ class DemoForm extends ConfigFormBase {
     $config->set('my_name', $form_state->getValue('my_name'))
       ->set('my_website', $form_state->getValue('my_website'));
 
-    // Get the dispatcher from the service container.
-    $dispatcher = \Drupal::service('event_dispatcher');
+    // Pass the data to all implementations of hook_demo_config_save().
+    $configData = $config->get();
+    $newData = \Drupal::service('module_handler')->invokeAll('demo_config_save', array($configData));
 
-    // Create a new event and pass the config object to it.
-    $e = new DemoEvent($config);
-
-    // Dispatch the event and return it.
-    $event = $dispatcher->dispatch('demo_form.save', $e);
-
-    // Get all the data from the altered config object.
-    $newData = $event->getConfig()->get();
-
-    // Merge into the config the new data coming from the dispatcher (values can be overwritten).
+    // Merge into the config the new data coming from the hook implementation.
     $config->merge($newData);
 
     // Save the config.
@@ -80,7 +71,7 @@ class DemoForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      'event_dispatcher_demo.demo_form_config',
+      'event_dispatcher_demo.demo_form_config'
     ];
   }
 }
