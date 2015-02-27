@@ -1,0 +1,7 @@
+event_dispatcher_demo.demo_form:
+  path: 'demo-form'
+  defaults:
+    _form: '\Drupal\event_dispatcher_demo\Form\DemoForm'
+    _title: 'Demo form'
+  requirements:
+    _permission: 'access administration pages'

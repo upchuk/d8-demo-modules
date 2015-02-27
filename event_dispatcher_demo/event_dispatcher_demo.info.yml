@@ -1,0 +1,5 @@
+name: Event Dispatcher Demo
+type: module
+description: Demo module demonstrating the use of the Event Dispatcher Symfony component
+core: 8.x
+package: Other
