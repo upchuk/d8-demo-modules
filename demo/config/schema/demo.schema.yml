@@ -1,0 +1,17 @@
+demo.settings:
+  type: mapping
+  label: 'Demo settings'
+  mapping:
+    demo:
+      type: mapping
+      mapping:
+        email_address:
+          type: text
+          label: 'A default email address'
+block.settings.demo_block:
+  type: block_settings
+  label: 'Demo block'
+  mapping:
+    demo_block_settings:
+      type: text
+      label: 'Who the message is addressed to'
