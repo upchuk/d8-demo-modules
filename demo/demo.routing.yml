@@ -13,3 +13,18 @@ demo.form:
     _title: 'Demo Form'
   requirements:
     _permission: 'access content'
+
+demo.multistep_one:
+  path: '/demo/multistep-one'
+  defaults:
+    _form: '\Drupal\demo\Form\Multistep\MultistepOneForm'
+    _title: 'First form'
+  requirements:
+    _permission: 'access content'
+demo.multistep_two:
+  path: '/demo/multistep-two'
+  defaults:
+    _form: '\Drupal\demo\Form\Multistep\MultistepTwoForm'
+    _title: 'Second form'
+  requirements:
+    _permission: 'access content'
