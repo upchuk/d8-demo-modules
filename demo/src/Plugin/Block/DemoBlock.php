@@ -2,6 +2,7 @@
 
 namespace Drupal\demo\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -38,7 +39,7 @@ class DemoBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockAccess(AccountInterface $account, $return_as_object = FALSE) {
-    return $account->hasPermission('access content');
+    return AccessResult::allowedIfHasPermission($account, 'access content');
   }
   
   /**
