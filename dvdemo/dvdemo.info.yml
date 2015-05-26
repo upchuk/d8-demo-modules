@@ -1,0 +1,4 @@
+name: Display Variants Demo
+description: 'Drupal 8 module illustrating the use of display variants'
+type: module
+core: 8.x
