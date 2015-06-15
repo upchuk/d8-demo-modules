@@ -1,0 +1,104 @@
+<?php
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeTypeInterface;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function reusable_forms_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
+
+  $form['reusable_forms'] = array(
+    '#type' => 'details',
+    '#title' => t('Reusable forms'),
+    '#group' => 'additional_settings',
+  );
+
+  $node_type = $form_state->getFormObject()->getEntity();
+
+  $form['reusable_forms']['reusable_forms_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable reusable forms'),
+    '#description' => t('Check this box if you would like a reusable form on this node type.'),
+    '#default_value' => $node_type->getThirdPartySetting('reusable_forms', 'enabled', 0),
+  );
+
+  $form_plugins = \Drupal::service('plugin.manager.reusable_forms')->getDefinitions();
+  $options = [];
+  foreach ($form_plugins as $name => $plugin) {
+    $options[$name] = $plugin['name'];
+  }
+
+  $form['reusable_forms']['reusable_forms_plugin'] = array(
+    '#type' => 'radios',
+    '#title' => t('Available forms'),
+    '#default_value' => $node_type->getThirdPartySetting('reusable_forms', 'plugin', 'basic_form'),
+    '#options' => $options,
+    '#description' => t('The available forms you can choose from for this node type.'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="reusable_forms_enabled"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  $form['#entity_builders'][] = 'reusable_forms_form_node_type_form_builder';
+}
+
+/**
+ * Entity form builder for the node type form to map some values to third party
+ * settings
+ */
+function reusable_forms_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state) {
+  if ($form_state->getValue('reusable_forms_enabled') === 1) {
+    $type->setThirdPartySetting('reusable_forms', 'enabled', 1);
+    $type->setThirdPartySetting('reusable_forms', 'plugin', $form_state->getValue('reusable_forms_plugin'));
+    return;
+  }
+
+  $type->unsetThirdPartySetting('reusable_forms', 'enabled');
+  $type->unsetThirdPartySetting('reusable_forms', 'plugin');
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function reusable_forms_entity_extra_field_info() {
+  $extra = array();
+
+  $bundles = NodeType::loadMultiple();
+  $bundles = array_filter($bundles, function($bundle){
+    return $bundle->getThirdPartySetting('reusable_forms', 'enabled') === 1;
+  });
+
+  foreach ($bundles as $bundle) {
+    $extra['node'][$bundle->Id()]['display']['reusable_form'] = array(
+      'label' => t('Reusable form'),
+      'description' => t('Reusable form'),
+      'weight' => 100,
+      'visible' => TRUE,
+    );
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function reusable_forms_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, $langcode) {
+  if (!$display->getComponent('reusable_form')) {
+    return;
+  }
+
+  $plugin_manager = \Drupal::service('plugin.manager.reusable_forms');
+  $node_type = NodeType::load($entity->bundle());
+  $plugin = $node_type->getThirdPartySetting('reusable_forms', 'plugin');
+  if (!$plugin) {
+    return;
+  }
+  $build['reusable_form'] = $plugin_manager->createInstance($plugin)->buildForm($entity);
+}

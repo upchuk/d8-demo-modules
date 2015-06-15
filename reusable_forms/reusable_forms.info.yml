@@ -1,0 +1,4 @@
+name: Reusable Forms
+description: 'Demo module illstrating the use of custom plugin types to create reusable forms used with nodes'
+core: 8.x
+type: module
