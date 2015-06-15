@@ -1,0 +1,13 @@
+node.type.*.third_party.reusable_forms:
+  type: mapping
+  label: 'Reusable Forms'
+  mapping:
+    reusable_forms_plugin:
+      type: boolean
+      label: 'Whether to enable the reusable forms on this node type'
+    reusable_forms_plugin:
+      type: sequence
+      label: 'Available forms'
+      sequence:
+        type: string
+        label: 'Plugin name'
