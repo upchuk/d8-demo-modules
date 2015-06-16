@@ -27,7 +27,8 @@ interface ReusableFormPluginInterface extends PluginInspectionInterface, Contain
    * @param $entity \Drupal\Core\Entity\EntityInterface.
    *   The entity this plugin is associated with.
    *
-   * @return \Drupal\reusable_forms\Form\ReusableFormInterface .
+   * @return array().
+   *   Render array of form that implements \Drupal\reusable_forms\Form\ReusableFormInterface
    */
   public function buildForm($entity);
 }
