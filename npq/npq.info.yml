@@ -1,0 +1,4 @@
+name: Node Publish Queue
+description: Demo module illustrating the Queue API in Drupal 8
+core: 8.x
+type: module

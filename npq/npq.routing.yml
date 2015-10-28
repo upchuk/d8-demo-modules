@@ -1,0 +1,7 @@
+demo.form:
+  path: '/npq'
+  defaults:
+    _form: '\Drupal\npq\Form\NodePublisherQueueForm'
+    _title: 'Node Publisher'
+  requirements:
+    _permission: 'administer site configuration'

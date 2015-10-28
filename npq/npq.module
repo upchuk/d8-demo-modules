@@ -1,0 +1,26 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\QueueInterface;
+
+/**
+ * Implements hook_entity_insert().
+ */
+function npq_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'node') {
+    return;
+  }
+
+  if ($entity->isPublished()) {
+    return;
+  }
+
+  /** @var QueueFactory $queue_factory */
+  $queue_factory = \Drupal::service('queue');
+  /** @var QueueInterface $queue */
+  $queue = $queue_factory->get('node_publisher');
+  $item = new \stdClass();
+  $item->nid = $entity->id();
+  $queue->createItem($item);
+}
