@@ -2,7 +2,7 @@
 
 namespace Drupal\demo\Plugin\DsField;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\ds\Plugin\DsField\DsFieldBase;
@@ -79,7 +79,7 @@ class VocabularyTerms extends DsFieldBase {
       return \Drupal::l($term->label(), $link_url);
     }
 
-    return SafeMarkup::checkPlain($term->label());
+    return HTML::escape($term->label());
   }
 
   /**
