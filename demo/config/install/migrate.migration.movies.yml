@@ -1,0 +1,21 @@
+id: movies
+label: Movies
+migration_group: demo
+source:
+  plugin: movies
+  key: default
+destination:
+  plugin: entity:node
+process:
+  type:
+    plugin: default_value
+    default_value: article
+  title: name
+  body: description
+  field_tags:
+    plugin: migration
+    migration: genres
+    source: genres
+migration_dependencies:
+  required:
+    - genres

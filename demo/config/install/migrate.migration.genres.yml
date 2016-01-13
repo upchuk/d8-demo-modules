@@ -1,0 +1,13 @@
+id: genres
+label: Genres
+migration_group: demo
+source:
+  plugin: genres
+  key: default
+destination:
+  plugin: entity:taxonomy_term
+process:
+  vid:
+    plugin: default_value
+    default_value: tags
+  name: name
