@@ -1,0 +1,23 @@
+<div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        {% for tab in nav %}
+            {% set active = '' %}
+            {% if loop.index0 == 0 %}
+                {% set active = 'active' %}
+            {% endif %}
+            <li role="presentation" class="{{ active }}"><a href="#tab-{{ loop.index0 }}" aria-controls="profile" role="tab" data-toggle="tab">{{ tab }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        {% for row in rows %}
+            {% set active = '' %}
+            {% if loop.index0 == 0 %}
+                {% set active = 'active' %}
+            {% endif %}
+            <div role="tabpanel" class="tab-pane {{ active }}" id="tab-{{ loop.index0 }}">{{ row.content }}</div>
+        {% endfor %}
+    </div>
+</div>

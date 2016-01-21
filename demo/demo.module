@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * Implements hook_theme().
+ */
+function demo_theme($existing, $type, $theme, $path) {
+  return array(
+    'demo_bootstrap_tabs' => array(
+      'variables' => array('view' => NULL, 'rows' => NULL),
+      'path' => drupal_get_path('module', 'demo') . '/templates',
+    ),
+  );
+}
+
+/**
+ * Prepares variables for views demo_bootstrap_tabs template.
+ *
+ * Template: demo-bootstrap-tabs.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: The view object.
+ *   - rows: An array of row items. Each row is an array of content.
+ */
+function template_preprocess_demo_bootstrap_tabs(&$variables) {
+  $view = $variables['view'];
+  $rows = $variables['rows'];
+  $variables['nav'] = array();
+
+  // Prepare the tab navigation.
+  $field = $view->style_plugin->options['tab_nav_field'];
+  if (!$field || !isset($view->field[$field])) {
+    template_preprocess_views_view_unformatted($variables);
+    return;
+  }
+
+  $nav = array();
+  foreach ($rows as $id => $row) {
+    $nav[$id] = array(
+      '#theme' => 'views_view_field',
+      '#view' => $view,
+      '#field' => $view->field[$field],
+      '#row' => $row['#row'],
+    );
+  }
+
+  template_preprocess_views_view_unformatted($variables);
+  $variables['nav'] = $nav;
+}
